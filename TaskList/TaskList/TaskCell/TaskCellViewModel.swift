@@ -8,7 +8,6 @@
 import Foundation
 
 protocol TaskCellViewModelProtocol {
-    var cellHeight: Double { get }
     var taskName: String { get }
     var idTask: Int { get }
     var completed: Bool { get }
@@ -22,10 +21,6 @@ protocol TaskSectionViewModelProtocol {
 }
 
 class TaskCellViewModel: TaskCellViewModelProtocol {
-    
-    var cellHeight: Double {
-        100
-    }
     
     var taskName: String {
         tasksList.name ?? "task name"

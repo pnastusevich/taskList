@@ -38,7 +38,7 @@ extension TaskListPresenter: TaskListInteractorOutputProtocol {
     func taskListDidReceive(with dataStore: TaskListDataStore) {
         self.dataStore = dataStore
         let section = TaskSectionViewModel()
-//        dataStore.tasksList.forEach { section.rows.append(TaskCellViewModel(tasksList: $0)) }
+
         for tasksList in dataStore.tasksList {
              let tasksCellViewModel = TaskCellViewModel(tasksList: tasksList)
             section.rows.append(tasksCellViewModel)
