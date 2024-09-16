@@ -50,7 +50,7 @@ class TaskListInteractor: TaskListInteractorInputProtocol {
                 let currentDate = Date()
                 
                 for task in taskList.todos {
-                    StorageManager.shared.create(task.todo, "Unowned", task.id, currentDate, task.completed) { task in
+                    StorageManager.shared.create(task.todo, "description", task.id, currentDate, task.completed) { task in
                         newTasks.append(task)
                     }
                 }
