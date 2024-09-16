@@ -9,7 +9,7 @@ import Foundation
 
 protocol TaskListRouterInputProtocol {
     init(view: TaskListViewController)
-//    func openTaskDetailsViewController(with taskList: TaskInApi)
+    func openTaskDetailsViewController(with taskList: Tasks)
 }
 
 class TaskListRouter: TaskListRouterInputProtocol {
@@ -19,7 +19,7 @@ class TaskListRouter: TaskListRouterInputProtocol {
         self.view = view
     }
     
-//    func openTaskDetailsViewController(with taskList: TaskInApi) {
+    func openTaskDetailsViewController(with taskList: Tasks) {
 //        view.performSegue(withIdentifier: "showDetails", sender: taskList)
-//    }
+    }
 }

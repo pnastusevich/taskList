@@ -8,13 +8,12 @@
 import Foundation
 
 protocol TaskCellViewModelProtocol {
-    var cellIdentifier: String { get }
     var cellHeight: Double { get }
     var taskName: String { get }
     var idTask: Int { get }
     var completed: Bool { get }
-    var userId: Int { get }
-    init(taskListInApi: Tasks)
+    var date: String { get }
+    init(tasksList: Task)
 }
 
 protocol TaskSectionViewModelProtocol {
@@ -24,34 +23,36 @@ protocol TaskSectionViewModelProtocol {
 
 class TaskCellViewModel: TaskCellViewModelProtocol {
     
-    var cellIdentifier: String {
-        "TaskCell"
-    }
-    
     var cellHeight: Double {
         100
     }
     
     var taskName: String {
-        taskListInApi.todo
+        tasksList.name ?? "task name"
     }
     
     var idTask: Int {
-        taskListInApi.id
+        Int(tasksList.id)
     }
     
     var completed: Bool {
-        taskListInApi.completed
+        tasksList.completed
     }
     
-    var userId: Int {
-        taskListInApi.userId
+    var date: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        return dateFormatter.string(from: tasksList.date!)
     }
     
-    private let taskListInApi: Tasks
+    var description: String {
+        tasksList.subname ?? "description"
+    }
     
-    required init(taskListInApi: Tasks) {
-        self.taskListInApi = taskListInApi
+    private let tasksList: Task
+    
+    required init(tasksList: Task) {
+        self.tasksList = tasksList
     }
 }
 

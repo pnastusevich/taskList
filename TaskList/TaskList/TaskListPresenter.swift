@@ -8,7 +8,9 @@
 import Foundation
 
 struct TaskListDataStore {
-    let tasksListInApi: [Tasks]
+    private let storageManager = StorageManager.shared
+    
+    let tasksList: [Task]
 }
 
 class TaskListPresenter: TaskListViewOutputProtocol {
@@ -36,6 +38,11 @@ extension TaskListPresenter: TaskListInteractorOutputProtocol {
     func taskListDidReceive(with dataStore: TaskListDataStore) {
         self.dataStore = dataStore
         let section = TaskSectionViewModel()
-        dataStore.tasksListInApi.forEach { section.rows.append(TaskCellViewModel(taskListInApi: $0)) }
+//        dataStore.tasksList.forEach { section.rows.append(TaskCellViewModel(tasksList: $0)) }
+        for tasksList in dataStore.tasksList {
+             let tasksCellViewModel = TaskCellViewModel(tasksList: tasksList)
+            section.rows.append(tasksCellViewModel)
+        }
+        view.reloadData(for: section)
     }
 }
