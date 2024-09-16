@@ -19,21 +19,46 @@ protocol TaskListInteractorOutputProtocol: AnyObject {
 class TaskListInteractor: TaskListInteractorInputProtocol {
 
     private unowned let presenter: TaskListInteractorOutputProtocol
+    
     required init(presenter: TaskListInteractorOutputProtocol) {
         self.presenter = presenter
     }
 
     
     func fetchTaskList() {
+        StorageManager.shared.fetchData { taskList in
+            switch taskList {
+            case .success(let taskList):
+                if taskList.isEmpty {
+                    fetchTasksFromAPI()
+                } else {
+                    let dataStore = TaskListDataStore(tasksList: taskList)
+                    presenter.taskListDidReceive(with: dataStore)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+                
+            }
+        }
+    }
+    
+    func fetchTasksFromAPI() {
         NetworkManager.shared.fetchData { [unowned self] result in
             switch result {
             case .success(let taskList):
-                let dataStore = TaskListDataStore(tasksListInApi: taskList.todos)
+                var newTasks: [Task] = []
+                let currentDate = Date()
+                
+                for task in taskList.todos {
+                    StorageManager.shared.create(task.todo, "Unowned", task.id, currentDate, task.completed) { task in
+                        newTasks.append(task)
+                    }
+                }
+                let dataStore = TaskListDataStore(tasksList: newTasks)
                 presenter.taskListDidReceive(with: dataStore)
             case .failure(let error):
                 print(error)
             }
-        
         }
     }
     

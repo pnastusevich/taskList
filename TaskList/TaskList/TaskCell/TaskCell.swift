@@ -23,8 +23,8 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         guard let viewVodel = viewModel as? TaskCellViewModel else { return }
         var content = defaultContentConfiguration()
         content.text = viewModel?.taskName
-        content.secondaryText = String(viewVodel.idTask)
-        
+        content.secondaryText = "\(viewVodel.idTask)"
+    
         contentConfiguration = content
     }
 }

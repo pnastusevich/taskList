@@ -30,10 +30,10 @@ final class StorageManager {
     }
     
     // MARK: - CRUD
-    func create(_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool, completion: (SavedTasks) -> Void) {
-        let task = SavedTasks(context: viewContext)
+    func create(_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool, completion: (Task) -> Void) {
+        let task = Task(context: viewContext)
         task.name = taskName
-        task.overview = description
+        task.subname = description
         task.id = Int64(taskId)
         task.date = date
         task.completed = completed
@@ -41,8 +41,8 @@ final class StorageManager {
         completion(task)
     }
     
-    func fetchData(completion: (Result<[SavedTasks], Error>) -> Void) {
-        let fetchRequest = SavedTasks.fetchRequest()
+    func fetchData(completion: (Result<[Task], Error>) -> Void) {
+        let fetchRequest = Task.fetchRequest()
         
         do {
             let task = try viewContext.fetch(fetchRequest)
@@ -52,16 +52,16 @@ final class StorageManager {
         }
     }
     
-    func update(_ task: SavedTasks,_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool) {
+    func update(_ task: Task,_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool) {
         task.name = taskName
-        task.overview = description
+        task.subname = description
         task.id = Int64(taskId)
         task.date = date
         task.completed = completed
         saveContext()
     }
     
-    func delete(_ task: SavedTasks) {
+    func delete(_ task: Task) {
         viewContext.delete(task)
         saveContext()
     }
