@@ -11,6 +11,8 @@ protocol TaskListInteractorInputProtocol {
     init(presenter: TaskListInteractorOutputProtocol)
     func fetchTaskList()
     func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool)
+    func deleteTask(_ task: Task)
+    func doneTask(_ task: Task?)
 }
 
 protocol TaskListInteractorOutputProtocol: AnyObject {
@@ -26,13 +28,13 @@ class TaskListInteractor: TaskListInteractorInputProtocol {
         self.presenter = presenter
     }
     
-    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool) {
-        StorageManager.shared.create(name, description, startDate, endDate, completed) { task in
+    // MARK: - Work in Data - CRUD
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ isComplete: Bool) {
+        StorageManager.shared.create(name, description, startDate, endDate, isComplete) { task in
             presenter.newSavedTaskDidReceived(with: task)
         }
     }
 
-    // MARK: - Получение данных
     func fetchTaskList() {
         StorageManager.shared.fetchData { taskList in
             switch taskList {
@@ -68,6 +70,15 @@ class TaskListInteractor: TaskListInteractorInputProtocol {
                 print(error)
             }
         }
+    }
+    
+    func doneTask(_ task: Task?) {
+        guard let task = task else { return }
+        StorageManager.shared.done(task)
+    }
+    
+    func deleteTask(_ task: Task) {
+        StorageManager.shared.delete(task)
     }
     
 }
