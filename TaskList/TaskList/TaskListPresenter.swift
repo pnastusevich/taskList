@@ -14,7 +14,7 @@ struct TaskListDataStore {
 }
 
 class TaskListPresenter: TaskListViewOutputProtocol {
-    
+   
     var interactor: TaskListInteractorInputProtocol!
     var router: TaskListRouterInputProtocol!
 
@@ -27,30 +27,65 @@ class TaskListPresenter: TaskListViewOutputProtocol {
     
     func viewDidLoad() {
         interactor.fetchTaskList()
+        loadTaskCounts()
     }
     
     func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ isComplete: Bool) {
         interactor.saveNewTask(name, description, startDate, endDate, isComplete)
+        loadTaskCounts()
     }
     
     func deleteTask(at indexPath: IndexPath) {
+        
         guard let task = dataStore?.tasksList[indexPath.row] else { return }
         
         interactor.deleteTask(task)
         dataStore?.tasksList.remove(at: indexPath.row)
         dataStore?.section.rows.remove(at: indexPath.row)
+        loadTaskCounts()
     }
     
     func doneTasks(at index: Int) {
+        guard let dataStore = dataStore else { return }
         
-        dataStore?.tasksList[index].isComplete = true
-
-        let taskCellViewModel = dataStore?.section.rows[index] as? TaskCellViewModel
+        dataStore.tasksList[index].isComplete = true
+        let taskCellViewModel = dataStore.section.rows[index] as? TaskCellViewModel
         taskCellViewModel?.isComplete = true
+        interactor.doneTask(dataStore.tasksList[index])
+        view.reloadData(for: dataStore.section)
+        loadTaskCounts()
+    }
+    
+    func loadTasks(for segment: Int) {
+        guard let dataStore = dataStore else { return }
         
-        interactor.doneTask(dataStore?.tasksList[index])
+        var filteredTasks: [TaskCellViewModelProtocol] = []
+        switch segment {
+         case 0:
+             filteredTasks = dataStore.tasksList.map { TaskCellViewModel(tasksList: $0) as TaskCellViewModelProtocol }
+         case 1:
+            filteredTasks = dataStore.tasksList
+                 .filter { !$0.isComplete }
+                 .map { TaskCellViewModel(tasksList: $0) as TaskCellViewModelProtocol }
+         case 2: 
+            filteredTasks = (dataStore.tasksList
+                .filter { $0.isComplete }
+                .map { TaskCellViewModel(tasksList: $0) as TaskCellViewModelProtocol })
+         default:
+             break
+         }
+        dataStore.section.rows = filteredTasks
+        view.reloadData(for: dataStore.section)
+        loadTaskCounts()
+    }
+    
+    func loadTaskCounts() {
+        guard let dataStore = dataStore else { return }
+        let totalTasks = dataStore.tasksList.count
+        let openTasks = dataStore.tasksList.filter { !$0.isComplete }.count
+        let closedTasks = dataStore.tasksList.filter { $0.isComplete }.count
         
-        view.reloadData(for: dataStore!.section)
+        view.updateSegmentedControlTitles(total: totalTasks, open: openTasks, closed: closedTasks)
     }
   
     func didTapCell(at indexPath: IndexPath) {
@@ -75,6 +110,7 @@ extension TaskListPresenter: TaskListInteractorOutputProtocol {
         let taskCellViewModel = TaskCellViewModel(tasksList: newTask)
         dataStore?.section.rows.append(taskCellViewModel)
         view.reloadData(for: dataStore!.section)
+        loadTaskCounts()
     }
   
 }

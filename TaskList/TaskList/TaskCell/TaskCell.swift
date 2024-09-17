@@ -92,11 +92,17 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         if viewModel.isComplete {
             isCompleteImage.image = UIImage(systemName: "checkmark.circle.fill")
             isCompleteImage.tintColor = .blue
-            titleLabel.textColor = .lightGray
-            titleLabel.attributedText = NSAttributedString(string: viewModel.name, attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+            
+            let attributedString = NSAttributedString(string: viewModel.name, attributes: [
+//                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                .foregroundColor: UIColor.lightGray
+            ])
+            titleLabel.attributedText = attributedString
+
         } else {
             isCompleteImage.image = UIImage(systemName: "circle")
             isCompleteImage.tintColor = .gray
+            
             titleLabel.attributedText = nil
             titleLabel.text = viewModel.name
             titleLabel.textColor = .black

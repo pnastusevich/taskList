@@ -36,7 +36,7 @@ class TaskCellViewModel: TaskCellViewModelProtocol {
         }
         set {
             tasksList.isComplete.toggle()
-        }
+            }
     }
     
     var startDate: Date {
