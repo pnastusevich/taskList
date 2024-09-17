@@ -38,7 +38,7 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         return label
     }()
     
-    private let completedImage: UIImageView = {
+    private let isCompleteImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -85,22 +85,42 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         
         guard let viewModel = viewModel as? TaskCellViewModel else { return }
         
-        titleLabel.text = viewModel.taskName
-        subtitleLabel.text = viewModel.description
-        timeLabel.text = viewModel.date
+        titleLabel.text = viewModel.name
+        subtitleLabel.text = viewModel.subname
+        timeLabel.text = formatDateRange(startDate: viewModel.startDate, endDate: viewModel.endDate)
         
-        if viewModel.completed {
-            completedImage.image = UIImage(systemName: "checkmark.circle.fill")
-            completedImage.tintColor = .blue
+        if viewModel.isComplete {
+            isCompleteImage.image = UIImage(systemName: "checkmark.circle.fill")
+            isCompleteImage.tintColor = .blue
             titleLabel.textColor = .lightGray
-            titleLabel.attributedText = NSAttributedString(string: viewModel.taskName, attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+            titleLabel.attributedText = NSAttributedString(string: viewModel.name, attributes: [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue])
         } else {
-            completedImage.image = UIImage(systemName: "circle")
-            completedImage.tintColor = .gray
+            isCompleteImage.image = UIImage(systemName: "circle")
+            isCompleteImage.tintColor = .gray
             titleLabel.attributedText = nil
-            titleLabel.text = viewModel.taskName
+            titleLabel.text = viewModel.name
             titleLabel.textColor = .black
         }
+    }
+    
+    private func formatDateRange(startDate: Date, endDate: Date) -> String {
+        let dateFormatter = DateFormatter()
+        let timeFormatter = DateFormatter()
+        
+        let calendar = Calendar.current
+        if calendar.isDateInToday(startDate) {
+            dateFormatter.dateFormat = "'Today'"
+        } else {
+            dateFormatter.dateFormat = "MMM d"
+        }
+
+        timeFormatter.dateFormat = "h:mm a"
+
+        let dateString = dateFormatter.string(from: startDate)
+        let startTimeString = timeFormatter.string(from: startDate)
+        let endTimeString = timeFormatter.string(from: endDate)
+        
+        return "\(dateString) \(startTimeString) - \(endTimeString)"
     }
     
     private func setupLayout() {
@@ -109,7 +129,7 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         containerView.addSubview(titleLabel)
         containerView.addSubview(subtitleLabel)
         containerView.addSubview(timeLabel)
-        containerView.addSubview(completedImage)
+        containerView.addSubview(isCompleteImage)
         containerView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
@@ -137,10 +157,10 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
                 timeLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
                 timeLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
                 
-                completedImage.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -23),
-                completedImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
-                completedImage.widthAnchor.constraint(equalToConstant: 30),
-                completedImage.heightAnchor.constraint(equalToConstant: 30)
+                isCompleteImage.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -23),
+                isCompleteImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
+                isCompleteImage.widthAnchor.constraint(equalToConstant: 30),
+                isCompleteImage.heightAnchor.constraint(equalToConstant: 30)
              ])
 
         }

@@ -14,7 +14,7 @@ struct TaskListDataStore {
 }
 
 class TaskListPresenter: TaskListViewOutputProtocol {
-   
+    
     var interactor: TaskListInteractorInputProtocol!
     var router: TaskListRouterInputProtocol!
 
@@ -29,8 +29,28 @@ class TaskListPresenter: TaskListViewOutputProtocol {
         interactor.fetchTaskList()
     }
     
-    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool) {
-        interactor.saveNewTask(name, description, startDate, endDate, completed)
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ isComplete: Bool) {
+        interactor.saveNewTask(name, description, startDate, endDate, isComplete)
+    }
+    
+    func deleteTask(at indexPath: IndexPath) {
+        guard let task = dataStore?.tasksList[indexPath.row] else { return }
+        
+        interactor.deleteTask(task)
+        dataStore?.tasksList.remove(at: indexPath.row)
+        dataStore?.section.rows.remove(at: indexPath.row)
+    }
+    
+    func doneTasks(at index: Int) {
+        
+        dataStore?.tasksList[index].isComplete = true
+
+        let taskCellViewModel = dataStore?.section.rows[index] as? TaskCellViewModel
+        taskCellViewModel?.isComplete = true
+        
+        interactor.doneTask(dataStore?.tasksList[index])
+        
+        view.reloadData(for: dataStore!.section)
     }
   
     func didTapCell(at indexPath: IndexPath) {

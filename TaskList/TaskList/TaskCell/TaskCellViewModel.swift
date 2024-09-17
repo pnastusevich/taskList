@@ -8,9 +8,11 @@
 import Foundation
 
 protocol TaskCellViewModelProtocol {
-    var taskName: String { get }
-    var completed: Bool { get }
-    var date: String { get }
+    var name: String { get }
+    var isComplete: Bool { get set }
+    var startDate: Date { get }
+    var subname: String { get }
+    var endDate: Date { get }
     init(tasksList: Task)
 }
 
@@ -21,47 +23,34 @@ protocol TaskSectionViewModelProtocol {
 
 class TaskCellViewModel: TaskCellViewModelProtocol {
     
-    var taskName: String {
+    var name: String {
         tasksList.name ?? "task name"
     }
     
-    var description: String {
+    var subname: String {
         tasksList.subname ?? "description"
     }
     
-    var completed: Bool {
-        tasksList.completed
+    var isComplete: Bool {
+        get { tasksList.isComplete
+        }
+        set {
+            tasksList.isComplete.toggle()
+        }
     }
     
-    var date: String {
-        guard let startDate = tasksList.startDate, let endDate = tasksList.endDate else { return "No date" }
-        return formatDateRange(startDate: startDate, endDate: endDate)
+    var startDate: Date {
+        tasksList.startDate ?? Date()
+    }
+    
+    var endDate: Date {
+        tasksList.endDate ?? Date()
     }
     
     private let tasksList: Task
     
     required init(tasksList: Task) {
         self.tasksList = tasksList
-    }
-    
-    private func formatDateRange(startDate: Date, endDate: Date) -> String {
-        let dateFormatter = DateFormatter()
-        let timeFormatter = DateFormatter()
-        
-        let calendar = Calendar.current
-        if calendar.isDateInToday(startDate) {
-            dateFormatter.dateFormat = "'Today'"
-        } else {
-            dateFormatter.dateFormat = "MMM d"
-        }
-
-        timeFormatter.dateFormat = "h:mm a"
-
-        let dateString = dateFormatter.string(from: startDate)
-        let startTimeString = timeFormatter.string(from: startDate)
-        let endTimeString = timeFormatter.string(from: endDate)
-        
-        return "\(dateString) \(startTimeString) - \(endTimeString)"
     }
 }
 

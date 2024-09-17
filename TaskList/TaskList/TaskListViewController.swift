@@ -16,7 +16,9 @@ protocol TaskListViewOutputProtocol {
     init(view: TaskListViewInputProtocol)
     func viewDidLoad()
     func didTapCell(at indexPath: IndexPath)
-    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool)
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ isComplete: Bool)
+    func deleteTask(at indexPath: IndexPath)
+    func doneTasks(at index: Int)
 }
 
 final class TaskListViewController: UIViewController {
@@ -91,8 +93,9 @@ final class TaskListViewController: UIViewController {
         presenter.viewDidLoad()
     }
     
-    @objc private func filterChanged() {
-        
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+     
+           tableView.reloadData()
     }
     
     // MARK: Navigation
@@ -144,8 +147,10 @@ final class TaskListViewController: UIViewController {
         
         filterSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
     
-//        filterSegmentedControl.addTarget(TaskListViewController.self, action: #selector(filterChanged), for: .valueChanged)
+        filterSegmentedControl.addTarget(TaskListViewController.self, action: #selector(segmentChanged(_:)), for: .valueChanged)
     }
+    
+    
     
     func setConstraint() {
         NSLayoutConstraint.activate([
@@ -192,13 +197,6 @@ extension TaskListViewController: UITableViewDataSource {
         
         return cell
     }
-    
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//            let headerView = UIView()
-//            headerView.backgroundColor = UIColor.clear
-//        
-//            return headerView
-//        }
 }
 
 // MARK: - UITableViewDelegate
@@ -206,6 +204,25 @@ extension TaskListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         presenter.didTapCell(at: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, _ in
+            presenter.deleteTask(at: indexPath)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        
+        let doneAction = UIContextualAction(style: .normal, title: "Done") { [unowned self] _, _, isDone in
+            
+            presenter.doneTasks(at: indexPath.row)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            isDone(true)
+        }
+        
+        doneAction.backgroundColor = .green
+
+        return UISwipeActionsConfiguration(actions: [doneAction, deleteAction])
     }
 }
 
