@@ -30,12 +30,12 @@ final class StorageManager {
     }
     
     // MARK: - CRUD
-    func create(_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool, completion: (Task) -> Void) {
+    func create(_ taskName: String,_ description: String,_ startDate: Date,_ endDate: Date,_ completed: Bool, completion: (Task) -> Void) {
         let task = Task(context: viewContext)
         task.name = taskName
         task.subname = description
-        task.id = Int64(taskId)
-        task.date = date
+        task.startDate = startDate
+        task.endDate = endDate
         task.completed = completed
         saveContext()
         completion(task)
@@ -52,11 +52,11 @@ final class StorageManager {
         }
     }
     
-    func update(_ task: Task,_ taskName: String,_ description: String,_ taskId: Int,_ date: Date,_ completed: Bool) {
+    func update(_ task: Task,_ taskName: String,_ description: String,_ startDate: Date,_ endDate: Date,_ completed: Bool) {
         task.name = taskName
         task.subname = description
-        task.id = Int64(taskId)
-        task.date = date
+        task.startDate = startDate
+        task.endDate = endDate
         task.completed = completed
         saveContext()
     }

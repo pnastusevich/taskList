@@ -27,6 +27,7 @@
 		851520312C95BFC600B04A6E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851520302C95BFC600B04A6E /* NetworkManager.swift */; };
 		851520332C95BFD700B04A6E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851520322C95BFD700B04A6E /* StorageManager.swift */; };
 		851520352C95C02000B04A6E /* TasksInAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851520342C95C02000B04A6E /* TasksInAPI.swift */; };
+		858A2B3A2C9963E0006FD706 /* Extenshion + UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858A2B392C9963E0006FD706 /* Extenshion + UIAlertController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		851520302C95BFC600B04A6E /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		851520322C95BFD700B04A6E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		851520342C95C02000B04A6E /* TasksInAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksInAPI.swift; sourceTree = "<group>"; };
+		858A2B392C9963E0006FD706 /* Extenshion + UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extenshion + UIAlertController.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 				8515201D2C95B8DE00B04A6E /* TaskListRouter.swift */,
 				8515201F2C95B8F500B04A6E /* TaskListConfigurator.swift */,
 				851520212C95B91100B04A6E /* TaskCell */,
+				858A2B382C99636A006FD706 /* Extenshion + TaskListViewComtroller */,
 			);
 			path = TaskList;
 			sourceTree = "<group>";
@@ -171,6 +174,14 @@
 				851520242C95B93E00B04A6E /* TaskCellViewModel.swift */,
 			);
 			path = TaskCell;
+			sourceTree = "<group>";
+		};
+		858A2B382C99636A006FD706 /* Extenshion + TaskListViewComtroller */ = {
+			isa = PBXGroup;
+			children = (
+				858A2B392C9963E0006FD706 /* Extenshion + UIAlertController.swift */,
+			);
+			path = "Extenshion + TaskListViewComtroller";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,6 +259,7 @@
 				851520202C95B8F500B04A6E /* TaskListConfigurator.swift in Sources */,
 				851520062C95B51A00B04A6E /* TaskList.xcdatamodeld in Sources */,
 				8515202F2C95BFAD00B04A6E /* TaskDetailsConfigurator.swift in Sources */,
+				858A2B3A2C9963E0006FD706 /* Extenshion + UIAlertController.swift in Sources */,
 				8515201A2C95B8A900B04A6E /* TaskListPresenter.swift in Sources */,
 				851520312C95BFC600B04A6E /* NetworkManager.swift in Sources */,
 				851520002C95B51A00B04A6E /* TaskListViewController.swift in Sources */,

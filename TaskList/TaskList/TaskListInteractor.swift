@@ -10,21 +10,29 @@ import Foundation
 protocol TaskListInteractorInputProtocol {
     init(presenter: TaskListInteractorOutputProtocol)
     func fetchTaskList()
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool)
 }
 
 protocol TaskListInteractorOutputProtocol: AnyObject {
     func taskListDidReceive(with dataStore: TaskListDataStore)
+    func newSavedTaskDidReceived(with newTask: Task)
 }
 
 class TaskListInteractor: TaskListInteractorInputProtocol {
-
+   
     private unowned let presenter: TaskListInteractorOutputProtocol
     
     required init(presenter: TaskListInteractorOutputProtocol) {
         self.presenter = presenter
     }
-
     
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool) {
+        StorageManager.shared.create(name, description, startDate, endDate, completed) { task in
+            presenter.newSavedTaskDidReceived(with: task)
+        }
+    }
+
+    // MARK: - Получение данных
     func fetchTaskList() {
         StorageManager.shared.fetchData { taskList in
             switch taskList {
@@ -50,7 +58,7 @@ class TaskListInteractor: TaskListInteractorInputProtocol {
                 let currentDate = Date()
                 
                 for task in taskList.todos {
-                    StorageManager.shared.create(task.todo, "description", task.id, currentDate, task.completed) { task in
+                    StorageManager.shared.create(task.todo, "description", currentDate, currentDate, task.completed) { task in
                         newTasks.append(task)
                     }
                 }
