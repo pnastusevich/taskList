@@ -16,9 +16,12 @@ protocol TaskListViewOutputProtocol {
     init(view: TaskListViewInputProtocol)
     func viewDidLoad()
     func didTapCell(at indexPath: IndexPath)
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool)
 }
 
 final class TaskListViewController: UIViewController {
+    
+    var activeTextField: UITextField?
     
     private lazy var tableView: UITableView = {
         $0.dataSource = self
@@ -32,7 +35,7 @@ final class TaskListViewController: UIViewController {
     private lazy var headerView: UIView = {
         let headerView = UIView()
         headerView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 120)
+        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 160)
         return headerView
     }()
     
@@ -47,7 +50,7 @@ final class TaskListViewController: UIViewController {
     
     private lazy var subtitle: UILabel = {
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "Wednesday, 11 May"
+        subtitleLabel.text = "Wednesday, 17 september"
         subtitleLabel.font = UIFont.systemFont(ofSize: 18)
         subtitleLabel.textColor = UIColor.lightGray
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -61,10 +64,11 @@ final class TaskListViewController: UIViewController {
         config.title = "+ New Task"
         config.baseForegroundColor = .systemBlue
         config.baseBackgroundColor = UIColor.colorButton
-        config.cornerStyle = .medium
+        config.cornerStyle = .large
         config.buttonSize = .large
         newTaskButton.translatesAutoresizingMaskIntoConstraints = false
         newTaskButton.configuration = config
+        newTaskButton.addTarget(self, action: #selector(showAlertController), for: .touchUpInside)
         
         return newTaskButton
     }()
@@ -87,10 +91,6 @@ final class TaskListViewController: UIViewController {
         presenter.viewDidLoad()
     }
     
-    @objc private func didTapNewTask() {
-        
-    }
-    
     @objc private func filterChanged() {
         
     }
@@ -101,7 +101,7 @@ final class TaskListViewController: UIViewController {
     }
     
     // MARK: Setup UI
-    func setupView() {
+    private func setupView() {
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         
         view.addSubview(tableView)
@@ -157,15 +157,15 @@ final class TaskListViewController: UIViewController {
             subtitle.topAnchor.constraint(equalTo: largeTitle.bottomAnchor, constant: 5),
 
             newTaskButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -20),
-            newTaskButton.centerYAnchor.constraint(equalTo: largeTitle.centerYAnchor),
+            newTaskButton.centerYAnchor.constraint(equalTo: largeTitle.centerYAnchor, constant: 10),
             
-            filterSegmentedControl.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 12),
+            filterSegmentedControl.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 15),
             filterSegmentedControl.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             filterSegmentedControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -64),
             
             filterSegmentedControl.heightAnchor.constraint(equalToConstant: 40),
 
-            headerView.bottomAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40),
+            headerView.bottomAnchor.constraint(equalTo: filterSegmentedControl.bottomAnchor, constant: 15),
             
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -174,6 +174,7 @@ final class TaskListViewController: UIViewController {
                 ])
     }
 }
+    
 
 // MARK: UITableViewDataCourse
 extension TaskListViewController: UITableViewDataSource {
@@ -192,12 +193,12 @@ extension TaskListViewController: UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            let headerView = UIView()
-            headerView.backgroundColor = UIColor.clear
-        
-            return headerView
-        }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//            let headerView = UIView()
+//            headerView.backgroundColor = UIColor.clear
+//        
+//            return headerView
+//        }
 }
 
 // MARK: - UITableViewDelegate

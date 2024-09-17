@@ -9,12 +9,12 @@ import Foundation
 
 struct TaskListDataStore {
     private let storageManager = StorageManager.shared
-    
-    let tasksList: [Task]
+    var tasksList: [Task]
+    let section = TaskSectionViewModel()
 }
 
 class TaskListPresenter: TaskListViewOutputProtocol {
-    
+   
     var interactor: TaskListInteractorInputProtocol!
     var router: TaskListRouterInputProtocol!
 
@@ -29,6 +29,10 @@ class TaskListPresenter: TaskListViewOutputProtocol {
         interactor.fetchTaskList()
     }
     
+    func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ completed: Bool) {
+        interactor.saveNewTask(name, description, startDate, endDate, completed)
+    }
+  
     func didTapCell(at indexPath: IndexPath) {
         
     }
@@ -37,12 +41,20 @@ class TaskListPresenter: TaskListViewOutputProtocol {
 extension TaskListPresenter: TaskListInteractorOutputProtocol {
     func taskListDidReceive(with dataStore: TaskListDataStore) {
         self.dataStore = dataStore
-        let section = TaskSectionViewModel()
 
-        for tasksList in dataStore.tasksList {
-             let tasksCellViewModel = TaskCellViewModel(tasksList: tasksList)
-            section.rows.append(tasksCellViewModel)
+        for task in dataStore.tasksList {
+            let tasksCellViewModel = TaskCellViewModel(tasksList: task)
+            dataStore.section.rows.append(tasksCellViewModel)
         }
-        view.reloadData(for: section)
+        view.reloadData(for: dataStore.section)
     }
+    
+    func newSavedTaskDidReceived(with newTask: Task) {
+        dataStore?.tasksList.append(newTask)
+        
+        let taskCellViewModel = TaskCellViewModel(tasksList: newTask)
+        dataStore?.section.rows.append(taskCellViewModel)
+        view.reloadData(for: dataStore!.section)
+    }
+  
 }

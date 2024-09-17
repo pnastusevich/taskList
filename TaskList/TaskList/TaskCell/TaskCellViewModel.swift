@@ -9,7 +9,6 @@ import Foundation
 
 protocol TaskCellViewModelProtocol {
     var taskName: String { get }
-    var idTask: Int { get }
     var completed: Bool { get }
     var date: String { get }
     init(tasksList: Task)
@@ -26,8 +25,8 @@ class TaskCellViewModel: TaskCellViewModelProtocol {
         tasksList.name ?? "task name"
     }
     
-    var idTask: Int {
-        Int(tasksList.id)
+    var description: String {
+        tasksList.subname ?? "description"
     }
     
     var completed: Bool {
@@ -35,19 +34,34 @@ class TaskCellViewModel: TaskCellViewModelProtocol {
     }
     
     var date: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        return dateFormatter.string(from: tasksList.date!)
-    }
-    
-    var description: String {
-        tasksList.subname ?? "description"
+        guard let startDate = tasksList.startDate, let endDate = tasksList.endDate else { return "No date" }
+        return formatDateRange(startDate: startDate, endDate: endDate)
     }
     
     private let tasksList: Task
     
     required init(tasksList: Task) {
         self.tasksList = tasksList
+    }
+    
+    private func formatDateRange(startDate: Date, endDate: Date) -> String {
+        let dateFormatter = DateFormatter()
+        let timeFormatter = DateFormatter()
+        
+        let calendar = Calendar.current
+        if calendar.isDateInToday(startDate) {
+            dateFormatter.dateFormat = "'Today'"
+        } else {
+            dateFormatter.dateFormat = "MMM d"
+        }
+
+        timeFormatter.dateFormat = "h:mm a"
+
+        let dateString = dateFormatter.string(from: startDate)
+        let startTimeString = timeFormatter.string(from: startDate)
+        let endTimeString = timeFormatter.string(from: endDate)
+        
+        return "\(dateString) \(startTimeString) - \(endTimeString)"
     }
 }
 

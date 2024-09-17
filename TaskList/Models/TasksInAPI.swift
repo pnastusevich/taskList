@@ -14,7 +14,6 @@ struct TasksInAPI: Decodable {
 }
 
 struct Tasks: Decodable {
-    let id: Int
     let todo: String
     let completed: Bool
 }
