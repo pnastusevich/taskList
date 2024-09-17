@@ -10,6 +10,7 @@ import UIKit
 protocol TaskListViewInputProtocol: AnyObject {
     
     func reloadData(for section: TaskSectionViewModel)
+    func updateSegmentedControlTitles(total: Int, open: Int, closed: Int)
 }
 
 protocol TaskListViewOutputProtocol {
@@ -19,6 +20,7 @@ protocol TaskListViewOutputProtocol {
     func saveNewTask(_ name: String, _ description: String, _ startDate: Date, _ endDate: Date, _ isComplete: Bool)
     func deleteTask(at indexPath: IndexPath)
     func doneTasks(at index: Int)
+    func loadTasks(for segment: Int)
 }
 
 final class TaskListViewController: UIViewController {
@@ -94,8 +96,8 @@ final class TaskListViewController: UIViewController {
     }
     
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
-     
-           tableView.reloadData()
+        let selectedSegment = sender.selectedSegmentIndex
+        presenter.loadTasks(for: selectedSegment)
     }
     
     // MARK: Navigation
@@ -147,11 +149,10 @@ final class TaskListViewController: UIViewController {
         
         filterSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
     
-        filterSegmentedControl.addTarget(TaskListViewController.self, action: #selector(segmentChanged(_:)), for: .valueChanged)
+        filterSegmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
+        
     }
-    
-    
-    
+
     func setConstraint() {
         NSLayoutConstraint.activate([
             
@@ -181,7 +182,7 @@ final class TaskListViewController: UIViewController {
 }
     
 
-// MARK: UITableViewDataCourse
+// MARK: UITableViewDataSourse
 extension TaskListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -228,6 +229,12 @@ extension TaskListViewController: UITableViewDelegate {
 
 // MARK: TaskListViewInputProtocol
 extension TaskListViewController: TaskListViewInputProtocol {
+    func updateSegmentedControlTitles(total: Int, open: Int, closed: Int) {
+        filterSegmentedControl.setTitle("All \(total)", forSegmentAt: 0)
+        filterSegmentedControl.setTitle("Open \(open)", forSegmentAt: 1)
+        filterSegmentedControl.setTitle("Closed \(closed)", forSegmentAt: 2)
+    }
+    
     func reloadData(for section: TaskSectionViewModel) {
         sectionViewModel = section
         tableView.reloadData()
