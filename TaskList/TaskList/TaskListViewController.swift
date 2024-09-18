@@ -11,6 +11,7 @@ protocol TaskListViewInputProtocol: AnyObject {
     
     func reloadData(for section: TaskSectionViewModel)
     func updateSegmentedControlTitles(total: Int, open: Int, closed: Int)
+    func reloadData()
 }
 
 protocol TaskListViewOutputProtocol {
@@ -54,7 +55,7 @@ final class TaskListViewController: UIViewController {
     
     private lazy var subtitle: UILabel = {
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "Wednesday, 17 september"
+        subtitleLabel.text = getCurrentFormattedDate()
         subtitleLabel.font = UIFont.systemFont(ofSize: 18)
         subtitleLabel.textColor = UIColor.lightGray
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -83,7 +84,6 @@ final class TaskListViewController: UIViewController {
     }()
     
     var presenter: TaskListViewOutputProtocol!
-    
     private var configurator: TaskListConfiguratorInputProtocol = TaskListConfigurator()
     private var sectionViewModel: TaskSectionViewModelProtocol = TaskSectionViewModel()
         
@@ -94,17 +94,7 @@ final class TaskListViewController: UIViewController {
         setupView()
         presenter.viewDidLoad()
     }
-    
-    @objc private func segmentChanged(_ sender: UISegmentedControl) {
-        let selectedSegment = sender.selectedSegmentIndex
-        presenter.loadTasks(for: selectedSegment)
-    }
-    
-    // MARK: Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         
-    }
-    
+            
     // MARK: Setup UI
     private func setupView() {
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -113,6 +103,7 @@ final class TaskListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.tableHeaderView = headerView
         
+        
         headerView.addSubview(largeTitle)
         headerView.addSubview(subtitle)
         headerView.addSubview(newTaskButton)
@@ -120,6 +111,11 @@ final class TaskListViewController: UIViewController {
    
         setupSegmentedControl()
         setConstraint()
+    }
+    
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        let selectedSegment = sender.selectedSegmentIndex
+        presenter.loadTasks(for: selectedSegment)
     }
     
     private func setupSegmentedControl() {
@@ -152,6 +148,12 @@ final class TaskListViewController: UIViewController {
         filterSegmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         
     }
+    
+    private func getCurrentFormattedDate() -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "EEEE, d MMMM"
+            return dateFormatter.string(from: Date())
+        }
 
     func setConstraint() {
         NSLayoutConstraint.activate([
@@ -222,13 +224,17 @@ extension TaskListViewController: UITableViewDelegate {
         }
         
         doneAction.backgroundColor = .green
-
         return UISwipeActionsConfiguration(actions: [doneAction, deleteAction])
     }
 }
 
 // MARK: TaskListViewInputProtocol
 extension TaskListViewController: TaskListViewInputProtocol {
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    
     func updateSegmentedControlTitles(total: Int, open: Int, closed: Int) {
         filterSegmentedControl.setTitle("All \(total)", forSegmentAt: 0)
         filterSegmentedControl.setTitle("Open \(open)", forSegmentAt: 1)
@@ -241,3 +247,13 @@ extension TaskListViewController: TaskListViewInputProtocol {
     }
     
 }
+
+extension TaskListViewController: TaskCellDelegate {
+    func didTapCompleteButton(in cell: TaskCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        presenter.doneTasks(at: indexPath.row)
+    }
+}
+
+
+
