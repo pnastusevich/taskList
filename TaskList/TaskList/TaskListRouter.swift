@@ -5,11 +5,11 @@
 //  Created by Паша Настусевич on 14.09.24.
 //
 
-import Foundation
+import UIKit
 
 protocol TaskListRouterInputProtocol {
     init(view: TaskListViewController)
-    func openTaskDetailsViewController(with taskList: Tasks)
+    func openTaskDetailsViewController(with task: Task)
 }
 
 class TaskListRouter: TaskListRouterInputProtocol {
@@ -19,7 +19,17 @@ class TaskListRouter: TaskListRouterInputProtocol {
         self.view = view
     }
     
-    func openTaskDetailsViewController(with taskList: Tasks) {
-//        view.performSegue(withIdentifier: "showDetails", sender: taskList)
+    func openTaskDetailsViewController(with task: Task) {
+        let taskDetailsVC = TaskDetailsViewController()
+        let navController = UINavigationController(rootViewController: taskDetailsVC)
+                  
+        let configurator: TaskDetailsConfiguratorInputProtocol = TaskDetailsConfigurator()
+        configurator.configure(withView: taskDetailsVC, and: task)
+        
+        taskDetailsVC.onDataUpdate = { [weak self] in
+            self?.view.reloadData()
+        }
+              
+        view.present(navController, animated: true, completion: nil)
     }
 }

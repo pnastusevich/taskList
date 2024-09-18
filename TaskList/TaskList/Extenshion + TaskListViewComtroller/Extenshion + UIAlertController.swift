@@ -10,7 +10,6 @@ import UIKit
 extension TaskListViewController {
 
     @objc func showAlertController() {
-        
         let alertController = UIAlertController(title: "New Task", message: "Enter task details", preferredStyle: .alert)
         
         alertController.addTextField { textField in
@@ -41,7 +40,6 @@ extension TaskListViewController {
                let endDate = self.convertToDate(from: endDateString) {
                 
                 self.presenter.saveNewTask(taskName, taskDescription, startDate, endDate, false)
-                
             } else {
                 print("Неправильный формат даты")
             }
@@ -94,29 +92,11 @@ extension TaskListViewController {
             
             textField.text = formatter.string(from: datePicker.date)
         }
-        
         view.endEditing(true)
     }
     
     @objc func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
-    }
-    
-    
-}
-
-extension UIView {
-    func findFirstResponder() -> UIResponder? {
-        if self.isFirstResponder {
-            return self
-        }
-        
-        for subview in self.subviews {
-            if let responder = subview.findFirstResponder() {
-                return responder
-            }
-        }
-        return nil
     }
 }
 

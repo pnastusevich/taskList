@@ -20,7 +20,7 @@ protocol TaskListInteractorOutputProtocol: AnyObject {
     func newSavedTaskDidReceived(with newTask: Task)
 }
 
-class TaskListInteractor: TaskListInteractorInputProtocol {
+final class TaskListInteractor: TaskListInteractorInputProtocol {
    
     private unowned let presenter: TaskListInteractorOutputProtocol
     

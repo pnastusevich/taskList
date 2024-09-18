@@ -13,10 +13,15 @@ struct TaskListDataStore {
     let section = TaskSectionViewModel()
 }
 
-class TaskListPresenter: TaskListViewOutputProtocol {
-   
+protocol TaskListPresenterProtocol: AnyObject {
+    func updateTask(_ task: Task)
+}
+
+final class TaskListPresenter: TaskListViewOutputProtocol {
+    
     var interactor: TaskListInteractorInputProtocol!
     var router: TaskListRouterInputProtocol!
+    
 
     private unowned let view: TaskListViewInputProtocol
     private var dataStore: TaskListDataStore?
@@ -89,7 +94,8 @@ class TaskListPresenter: TaskListViewOutputProtocol {
     }
   
     func didTapCell(at indexPath: IndexPath) {
-        
+        guard let task = dataStore?.tasksList[indexPath.row] else { return }
+        router.openTaskDetailsViewController(with: task)
     }
 }
 // MARK: - TaskListInteractorOutoutProtocol
@@ -114,3 +120,12 @@ extension TaskListPresenter: TaskListInteractorOutputProtocol {
     }
   
 }
+
+extension TaskListPresenter: TaskListPresenterProtocol {
+    func updateTask(_ task: Task) {
+        view.reloadData(for: dataStore!.section)
+    }
+    
+    
+}
+
