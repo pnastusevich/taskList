@@ -12,7 +12,7 @@ protocol TaskListRouterInputProtocol {
     func openTaskDetailsViewController(with task: Task)
 }
 
-class TaskListRouter: TaskListRouterInputProtocol {
+final class TaskListRouter: TaskListRouterInputProtocol {
     private unowned let view: TaskListViewController
     
     required init(view: TaskListViewController) {

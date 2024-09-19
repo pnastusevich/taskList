@@ -16,7 +16,7 @@ enum NetworkError: Error {
 final class NetworkManager {
     
     static let shared = NetworkManager()
-    
+
     private init() {}
     
     func fetchData(completion:  @escaping (Result<TasksInAPI, NetworkError>) -> Void) {

@@ -20,12 +20,9 @@ protocol TaskDetailsViewOutputProtocol {
     func updateTask(_ name: String,_ description: String,_ startDate: String,_ endDate: String)
 }
 
-
-
-final class TaskDetailsViewController: UIViewController {
+final class TaskDetailsViewController: UIViewController{
     
     var activeTextField: UITextField?
-    
     var onDataUpdate: (() -> Void)?
     
     private lazy var nameTextField: UITextField = {
@@ -33,7 +30,6 @@ final class TaskDetailsViewController: UIViewController {
         textField.placeholder = "Name task"
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
-        
         return textField
     }()
     
@@ -42,7 +38,6 @@ final class TaskDetailsViewController: UIViewController {
         textField.placeholder = "Descrption task"
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
-        
         return textField
     }()
     
@@ -52,7 +47,6 @@ final class TaskDetailsViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.inputView = self.createDatePicker(textField: textField, mode: .dateAndTime)
-        
         return textField
     }()
     
@@ -62,7 +56,6 @@ final class TaskDetailsViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.inputView = self.createDatePicker(textField: textField, mode: .dateAndTime)
-        
         return textField
     }()
     
@@ -73,7 +66,6 @@ final class TaskDetailsViewController: UIViewController {
             saveTask()
         })
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         return button
     }()
     
@@ -85,13 +77,11 @@ final class TaskDetailsViewController: UIViewController {
             cancelTask()
         })
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         return button
     }()
     
     var presenter: TaskDetailsViewOutputProtocol!
 
-    
     // MARK: - Life Cycle view
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,23 +100,20 @@ final class TaskDetailsViewController: UIViewController {
         
         presenter.updateTask(nameTF, subtitleTF, startDateTF, endDateTF)
         onDataUpdate?()
-
         dismiss(animated: true)
-
     }
 
     @objc private func cancelTask() {
+        onDataUpdate?()
         dismiss(animated: true)
     }
     
     private func setupNavigationBar() {
         title = "Edit Task"
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem:.cancel,
             target: self,
             action: #selector(cancelTask))
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .save,
             target: self,
@@ -136,7 +123,7 @@ final class TaskDetailsViewController: UIViewController {
 
 // MARK: - Setup UI
 private extension TaskDetailsViewController {
-    
+
     func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
             view.addSubview(subview)
@@ -183,26 +170,22 @@ private extension TaskDetailsViewController {
 
 // MARK: - TaskDetailsViewInputProtocol
 extension TaskDetailsViewController: TaskDetailsViewInputProtocol {
+    
     func displayTaskName(with title: String) {
         nameTextField.text = title
     }
-    
     func displaySubtitle(with title: String) {
         subtitleTextField.text = title
     }
-    
     func displayStartDate(with title: String) {
         startDateTextField.text = title
     }
-    
     func displayEndDate(with title: String) {
         endDateTextField.text = title
     }
-    
 }
 
 // MARK: - Setup DatePicker
-
 extension TaskDetailsViewController {
     
     func createDatePicker(textField: UITextField, mode: UIDatePicker.Mode) -> UIDatePicker {
@@ -215,7 +198,6 @@ extension TaskDetailsViewController {
         
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        
         let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(donePressed))
         toolbar.setItems([doneButton], animated: true)
         
@@ -238,7 +220,6 @@ extension TaskDetailsViewController {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             formatter.timeStyle = .short
-            
             textField.text = formatter.string(from: datePicker.date)
         }
         view.endEditing(true)
@@ -248,3 +229,5 @@ extension TaskDetailsViewController {
         activeTextField = textField
     }
 }
+
+

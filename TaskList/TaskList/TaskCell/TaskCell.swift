@@ -15,7 +15,7 @@ protocol CellModelRepresentable {
     var viewModel: TaskCellViewModelProtocol? { get }
 }
 
-class TaskCell: UITableViewCell, CellModelRepresentable {
+final class TaskCell: UITableViewCell, CellModelRepresentable {
     
     static let cellID = "TaskCell"
     weak var delegate: TaskCellDelegate?
@@ -68,7 +68,6 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         containerView.layer.shadowOpacity = 0.1
         containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
         containerView.layer.shadowRadius = 4
-        
         return containerView
     }()
     
@@ -98,13 +97,15 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
                                          endDate: viewModel.endDate)
         
         if viewModel.isComplete {
-            isCompleteButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+            isCompleteButton.setImage(UIImage(systemName: "checkmark.circle.fill"),for: .normal)
             isCompleteButton.tintColor = .blue
             
-            let attributedString = NSAttributedString(string: viewModel.name,
-                                                      attributes: [
-                                                        .foregroundColor: UIColor.lightGray
-                                                      ])
+            let attributedString = NSAttributedString(
+                string: viewModel.name,
+                attributes: [
+                    .foregroundColor: UIColor.lightGray
+                ]
+            )
             titleLabel.attributedText = attributedString
         } else {
             isCompleteButton.setImage(UIImage(systemName: "circle"), for: .normal)
@@ -151,7 +152,8 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
         containerView.addSubview(isCompleteButton)
         containerView.addSubview(separatorView)
         
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+            [
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
@@ -180,8 +182,7 @@ class TaskCell: UITableViewCell, CellModelRepresentable {
             isCompleteButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -25),
             isCompleteButton.widthAnchor.constraint(equalToConstant: 30),
             isCompleteButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
-        
+        ]
+        )
     }
-    
 }

@@ -21,7 +21,7 @@ protocol TaskSectionViewModelProtocol {
     var numberOfRows: Int { get }
 }
 
-class TaskCellViewModel: TaskCellViewModelProtocol {
+final class TaskCellViewModel: TaskCellViewModelProtocol {
     
     var name: String {
         tasksList.name ?? "task name"
@@ -54,7 +54,7 @@ class TaskCellViewModel: TaskCellViewModelProtocol {
     }
 }
 
-class TaskSectionViewModel: TaskSectionViewModelProtocol {
+final class TaskSectionViewModel: TaskSectionViewModelProtocol {
     var rows: [TaskCellViewModelProtocol] = []
     var numberOfRows: Int {
         rows.count

@@ -22,7 +22,6 @@ final class TaskListPresenter: TaskListViewOutputProtocol {
     var interactor: TaskListInteractorInputProtocol!
     var router: TaskListRouterInputProtocol!
     
-
     private unowned let view: TaskListViewInputProtocol
     private var dataStore: TaskListDataStore?
     
@@ -118,7 +117,6 @@ extension TaskListPresenter: TaskListInteractorOutputProtocol {
         view.reloadData(for: dataStore!.section)
         loadTaskCounts()
     }
-  
 }
 
 extension TaskListPresenter: TaskListPresenterProtocol {
