@@ -11,7 +11,7 @@ protocol TaskListConfiguratorInputProtocol {
     func configure(withView view: TaskListViewController)
 }
 
-class TaskListConfigurator: TaskListConfiguratorInputProtocol {
+final class TaskListConfigurator: TaskListConfiguratorInputProtocol {
     
     func configure(withView view: TaskListViewController) {
         let presenter = TaskListPresenter(view: view)

@@ -9,7 +9,7 @@ protocol TaskDetailsConfiguratorInputProtocol {
     func configure(withView view: TaskDetailsViewController, and task: Task)
 }
 
-class TaskDetailsConfigurator: TaskDetailsConfiguratorInputProtocol {
+final class TaskDetailsConfigurator: TaskDetailsConfiguratorInputProtocol {
     func configure(withView view: TaskDetailsViewController, and task: Task) {
         let presenter = TaskDetailsPresenter(view: view)
         let interactor = TaskDetailsInteractor(presenter: presenter, task: task)

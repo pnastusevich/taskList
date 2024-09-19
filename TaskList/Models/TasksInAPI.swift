@@ -10,7 +10,6 @@ import Foundation
 struct TasksInAPI: Decodable {
     
     let todos: [Tasks]
-    
 }
 
 struct Tasks: Decodable {

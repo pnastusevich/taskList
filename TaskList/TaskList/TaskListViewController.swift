@@ -40,7 +40,9 @@ final class TaskListViewController: UIViewController {
     private lazy var headerView: UIView = {
         let headerView = UIView()
         headerView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 160)
+        headerView.frame = CGRect(x: 0, y: 0,
+                                  width: view.frame.width,
+                                  height: 160)
         return headerView
     }()
     
@@ -73,7 +75,10 @@ final class TaskListViewController: UIViewController {
         config.buttonSize = .large
         newTaskButton.translatesAutoresizingMaskIntoConstraints = false
         newTaskButton.configuration = config
-        newTaskButton.addTarget(self, action: #selector(showAlertController), for: .touchUpInside)
+        newTaskButton.addTarget(self,
+                                action: #selector(showAlertController),
+                                for: .touchUpInside
+        )
         
         return newTaskButton
     }()
@@ -103,7 +108,6 @@ final class TaskListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.tableHeaderView = headerView
         
-        
         headerView.addSubview(largeTitle)
         headerView.addSubview(subtitle)
         headerView.addSubview(newTaskButton)
@@ -127,7 +131,6 @@ final class TaskListViewController: UIViewController {
                    .foregroundColor: UIColor.gray,
                    .font: UIFont.systemFont(ofSize: 16, weight: .bold)
                ]
-        
         let selectedTextAttributes: [NSAttributedString.Key: Any] = [
                    .foregroundColor: UIColor.systemBlue,
                    .font: UIFont.systemFont(ofSize: 16, weight: .bold)
@@ -146,7 +149,6 @@ final class TaskListViewController: UIViewController {
         filterSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
     
         filterSegmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
-        
     }
     
     private func getCurrentFormattedDate() -> String {
@@ -157,7 +159,6 @@ final class TaskListViewController: UIViewController {
 
     func setConstraint() {
         NSLayoutConstraint.activate([
-            
             largeTitle.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             largeTitle.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 20),
 
@@ -170,7 +171,6 @@ final class TaskListViewController: UIViewController {
             filterSegmentedControl.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 15),
             filterSegmentedControl.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             filterSegmentedControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -64),
-            
             filterSegmentedControl.heightAnchor.constraint(equalToConstant: 40),
 
             headerView.bottomAnchor.constraint(equalTo: filterSegmentedControl.bottomAnchor, constant: 15),
@@ -182,7 +182,6 @@ final class TaskListViewController: UIViewController {
                 ])
     }
 }
-    
 
 // MARK: UITableViewDataSourse
 extension TaskListViewController: UITableViewDataSource {
@@ -217,7 +216,6 @@ extension TaskListViewController: UITableViewDelegate {
         }
         
         let doneAction = UIContextualAction(style: .normal, title: "Done") { [unowned self] _, _, isDone in
-            
             presenter.doneTasks(at: indexPath.row)
             tableView.reloadRows(at: [indexPath], with: .automatic)
             isDone(true)
@@ -230,11 +228,7 @@ extension TaskListViewController: UITableViewDelegate {
 
 // MARK: TaskListViewInputProtocol
 extension TaskListViewController: TaskListViewInputProtocol {
-    func reloadData() {
-        tableView.reloadData()
-    }
-    
-    
+ 
     func updateSegmentedControlTitles(total: Int, open: Int, closed: Int) {
         filterSegmentedControl.setTitle("All \(total)", forSegmentAt: 0)
         filterSegmentedControl.setTitle("Open \(open)", forSegmentAt: 1)
@@ -245,7 +239,9 @@ extension TaskListViewController: TaskListViewInputProtocol {
         sectionViewModel = section
         tableView.reloadData()
     }
-    
+    func reloadData() {
+        tableView.reloadData()
+    }
 }
 
 extension TaskListViewController: TaskCellDelegate {

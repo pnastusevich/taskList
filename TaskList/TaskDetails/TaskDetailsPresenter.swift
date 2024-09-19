@@ -15,9 +15,8 @@ struct TaskDetailsDataStore {
     let isFavorite: Bool
 }
 
-class TaskDetailsPresenter: TaskDetailsViewOutputProtocol {
-    
-    
+final class TaskDetailsPresenter: TaskDetailsViewOutputProtocol {
+
     var interactor: TaskDetailsInteractorInputProtocol!
     private unowned let view: TaskDetailsViewInputProtocol
     

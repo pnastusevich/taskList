@@ -19,7 +19,7 @@ protocol TaskDetailsInteractorOutputProtocol: AnyObject {
     func receiveTaskDetails(with dataStore: TaskDetailsDataStore)
 }
 
-class TaskDetailsInteractor: TaskDetailsInteractorInputProtocol {
+final class TaskDetailsInteractor: TaskDetailsInteractorInputProtocol {
     
     weak var taskListPresenter: TaskListPresenterProtocol?
     
